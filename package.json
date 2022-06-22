@@ -1,0 +1,27 @@
+{
+  "name": "myserver",
+  "version": "1.0.0",
+  "description": "http server using createServer",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nitinsharmacs/myserver.git"
+  },
+  "keywords": [
+    "server",
+    "http",
+    "router"
+  ],
+  "author": "nitin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nitinsharmacs/myserver/issues"
+  },
+  "homepage": "https://github.com/nitinsharmacs/myserver#readme"
+}
