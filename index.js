@@ -5,6 +5,7 @@ const main = () => {
     socket.setEncoding('utf8');
 
     socket.on('data', (chunk) => {
+      console.log(chunk.split('\r\n'));
       socket.end();
     });
   });

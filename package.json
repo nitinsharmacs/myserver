@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/nitinsharmacs/myserver/issues"
   },
-  "homepage": "https://github.com/nitinsharmacs/myserver#readme"
+  "homepage": "https://github.com/nitinsharmacs/myserver#readme",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
 }
