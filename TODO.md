@@ -1,10 +1,13 @@
 ## TODO
 
-
+- [ ] Serve files
+- [ ] Make server entity
+- [ ] Create a fallback route when non uri matches
 - [ ] Don't pass router to server. Server should have router
 
 ## DONE
 
+- [x] Server shouldn't end the socket. Route handler should do it
 - [x] Implement methods in Response class
   - [x] send : sending text/plain
   - [x] json : sending application/json
