@@ -2,16 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const mime = require('mime-types');
 
-const readPublicFiles = (file, fileReader, cb) => {
-  fileReader(`./${file}`, (err, data) => {
-    cb(err, data);
-  });
-};
-
 const serveFile = (req, res) => {
   const { reqEndPoint: filepath } = req;
 
-  readPublicFiles(filepath, fs.readFile, (err, data) => {
+  fs.readFile(`./${filepath}`, (err, data) => {
     if (err) {
       res.status(404).send('File not found');
       return;
@@ -27,4 +21,4 @@ const serveFile = (req, res) => {
   });
 };
 
-module.exports = { serveFile, readPublicFiles };
+module.exports = { serveFile };

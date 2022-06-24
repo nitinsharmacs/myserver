@@ -1,20 +1,10 @@
 ## TODO
 
-<<<<<<< HEAD
-=======
-- [ ] Serve files
-- [ ] Make server entity
-- [ ] Create a fallback route when non uri matches
->>>>>>> main
 - [ ] Don't pass router to server. Server should have router
 
 ## DONE
 
-<<<<<<< HEAD
 - [x] serve static files
-=======
-- [x] Server shouldn't end the socket. Route handler should do it
->>>>>>> main
 - [x] Implement methods in Response class
   - [x] send : sending text/plain
   - [x] json : sending application/json
