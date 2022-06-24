@@ -41,20 +41,20 @@ describe('httpResponse', () => {
   });
 });
 
-const mockSocket = (expectedText) => {
+const mockSocket = (expectedTexts) => {
   return {
     write: function (actualText) {
-      this.writeCalls++;
-      assert.strictEqual(actualText, expectedText);
+      assert.strictEqual(actualText, expectedTexts[this.writeCalls++]);
     },
-    writeCalls: 0
+    writeCalls: 0,
+    end: function () { }
   };
 };
 
 describe('Response', () => {
   describe('send', () => {
     it('should send the plain text', () => {
-      const socket = mockSocket('HTTP/1.1 200\r\ncontent-type:text/plain\r\n\r\nhello\r\n');
+      const socket = mockSocket(['HTTP/1.1 200\r\ncontent-type:text/plain\r\n\r\nhello\r\n']);
       const response = new Response(socket);
 
       response.send('hello');
@@ -64,7 +64,7 @@ describe('Response', () => {
 
   describe('json', () => {
     it('should send the json', () => {
-      const socket = mockSocket('HTTP/1.1 200\r\ncontent-type:application/json\r\n\r\n{"a":1}\r\n');
+      const socket = mockSocket(['HTTP/1.1 200\r\ncontent-type:application/json\r\n\r\n{"a":1}\r\n']);
       const response = new Response(socket);
 
       const body = { a: 1 };
@@ -76,13 +76,30 @@ describe('Response', () => {
 
   describe('sendHtml', () => {
     it('should send the html page', () => {
-      const socket = mockSocket('HTTP/1.1 200\r\ncontent-type:text/html\r\n\r\n<h1>hello</h1>\r\n');
+      const socket = mockSocket(['HTTP/1.1 200\r\ncontent-type:text/html\r\n\r\n<h1>hello</h1>\r\n']);
       const response = new Response(socket);
 
       const body = '<h1>hello</h1>';
 
       response.sendHtml(body);
       assert.ok(socket.writeCalls === 1);
+    });
+  });
+
+  describe('file', () => {
+    it('should send file', () => {
+      const socket = mockSocket([
+        'HTTP/1.1 200\r\n',
+        'content-length:5\r\n',
+        '\r\n',
+        'hello'
+      ]);
+      const response = new Response(socket);
+
+      const body = 'hello';
+
+      response.file(body);
+      assert.ok(socket.writeCalls === 4);
     });
   });
 });

@@ -1,10 +1,10 @@
 ## TODO
 
-
 - [ ] Don't pass router to server. Server should have router
 
 ## DONE
 
+- [x] serve static files
 - [x] Implement methods in Response class
   - [x] send : sending text/plain
   - [x] json : sending application/json

@@ -1,19 +1,12 @@
 const { myServer } = require('./src/myServer.js');
 const { Router } = require('./src/router.js');
+const { serveFile } = require('./src/serveFiles.js');
 
 const main = () => {
   const router = new Router();
   const server = myServer(router);
 
-  router.get('/add/:num1/:num2', (req, res) => {
-    const { num1, num2 } = req.params;
-    res.sendHtml(`<h1>${num1} + ${num2} = ${+num1 + +num2}</h1>`);
-  });
-
-  router.get('/sub/:num1/:num2', (req, res) => {
-    const { num1, num2 } = req.params;
-    res.sendHtml(`<h1>${num1} - ${num2} = ${+num1 - +num2}</h1>`);
-  });
+  router.get('/public', serveFile);
 
   router.get('/demo-data', (req, res) => {
     res.status(200).json({ message: 'hello world' });

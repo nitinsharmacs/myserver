@@ -6,11 +6,10 @@ const onNewConnection = (socket, router) => {
   socket.setEncoding('utf8');
 
   socket.on('data', chunk => {
-    const request = parseRequest(chunk);
+    const req = parseRequest(chunk);
     const res = new Response(socket);
 
-    router.runHandler(request, res);
-    socket.end();
+    router.runHandler(req, res);
   });
 };
 
