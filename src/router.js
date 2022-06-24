@@ -1,16 +1,33 @@
 const { EndPoint } = require("./endPoint.js");
 
+const createActionsIterator = (actions) => {
+  let current = 0;
+  return function (req, res, next) {
+    actions[++current](req, res, () => {
+      next(req, res, next);
+    });
+  };
+};
+
 class Route {
-  #currentIndex;
   constructor(reqMethod, endPoint, actions) {
     this.reqMethod = reqMethod;
     this.endPoint = endPoint;
     this.actions = actions;
-    this.#currentIndex = 0;
   }
 
-  next() {
-    return this.actions[++this.#currentIndex];
+  runHandlers(request, response) {
+    const reqMeta = {
+      ...request,
+      ...this.endPoint.parse(request.uri)
+    };
+
+    const next = createActionsIterator(this.actions);
+    const [currentAction] = this.actions;
+
+    currentAction(reqMeta, response, () => {
+      next(reqMeta, response, next);
+    })
   }
 }
 
@@ -61,10 +78,11 @@ class Router {
     };
   }
 
-  runHandler({ method, uri }, response) {
-    const handler = this.getHandler(method.toLowerCase(), uri);
+  runHandler(request, response) {
+    const { method, uri } = request;
+    const route = this.getRoute(method.toLowerCase(), uri);
 
-    handler(response);
+    route.runHandlers(request, response);
   }
 
   getRoutes(reqMethod) {

@@ -1,9 +1,5 @@
 ## TODO
 
-- [ ] make router working with multiple handlers
-  - [x] Route entity
-    - [ ] next method for next action
-  - [ ] control should go to next handler unless reponse is sent
 - [ ] MyServer as an entity
 - [ ] Implement fallback request
 - [ ] Make a Request entity
@@ -12,6 +8,10 @@
 
 ## DONE
 
+- [x] make router working with multiple handlers
+  - [x] Route entity
+    - [x] next method for next action
+  - [x] control should go to next handler unless reponse is sent
 - [x] serve static files
 - [x] Implement methods in Response class
   - [x] send : sending text/plain

@@ -8,7 +8,10 @@ const main = () => {
 
   router.get('/public', serveFile);
 
-  router.get('/demo-data', (req, res) => {
+  router.get('/demo-data', (req, res, next) => {
+    console.log('hii');
+    next();
+  }, (req, res) => {
     res.status(200).json({ message: 'hello world' });
   });
 
