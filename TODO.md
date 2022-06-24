@@ -1,5 +1,12 @@
 ## TODO
 
+- [ ] make router working with multiple handlers
+  - [x] Route entity
+    - [ ] next method for next action
+  - [ ] control should go to next handler unless reponse is sent
+- [ ] MyServer as an entity
+- [ ] Implement fallback request
+- [ ] Make a Request entity
 - [ ] implement redirect method on reponse
 - [ ] Don't pass router to server. Server should have router
 

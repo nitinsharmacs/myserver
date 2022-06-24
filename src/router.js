@@ -1,35 +1,44 @@
 const { EndPoint } = require("./endPoint.js");
 
+class Route {
+  #currentIndex;
+  constructor(reqMethod, endPoint, actions) {
+    this.reqMethod = reqMethod;
+    this.endPoint = endPoint;
+    this.actions = actions;
+    this.#currentIndex = 0;
+  }
+
+  next() {
+    return this.actions[++this.#currentIndex];
+  }
+}
+
 class Router {
   #routes;
   constructor() {
-    this.#routes = {
-      get: [],
-      put: []
-    };
+    this.#routes = [];
   }
 
-  #register(reqMethod, endPoint, action) {
-    const route = {
-      endPoint: new EndPoint(endPoint),
-      reqMethod: reqMethod,
-      action: action
-    };
+  #register(reqMethod, endPoint, actions) {
+    const route = new Route(reqMethod, new EndPoint(endPoint), actions);
 
-    this.#routes[reqMethod].push(route);
+    this.#routes.push(route);
   }
 
-  get(endPoint, action) {
-    this.#register('get', endPoint, action);
+  get(endPoint, ...actions) {
+    this.#register('get', endPoint, actions);
   }
 
-  put(endPoint, action) {
-    this.#register('put', endPoint, action);
+  put(endPoint, ...actions) {
+    this.#register('put', endPoint, actions);
   }
 
   getRoute(reqMethod, reqEndPoint) {
-    const routes = this.#routes[reqMethod];
-    return routes.find(route => route.endPoint.matches(reqEndPoint));
+    return this.#routes.find(
+      route => route.reqMethod === reqMethod &&
+        route.endPoint.matches(reqEndPoint)
+    );
   }
 
   getHandler(reqMethod, reqEndPoint) {
@@ -39,7 +48,7 @@ class Router {
       throw new Error('Route not found!');
     }
 
-    const { action, endPoint } = route;
+    const { actions: [action], endPoint } = route;
 
     const reqMeta = {
       reqMethod,
@@ -59,7 +68,7 @@ class Router {
   }
 
   getRoutes(reqMethod) {
-    return this.#routes[reqMethod];
+    return this.#routes.filter(route => route.reqMethod === reqMethod);
   }
 }
 

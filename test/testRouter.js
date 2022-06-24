@@ -14,7 +14,7 @@ describe('Router', () => {
         {
           endPoint: new EndPoint('/'),
           reqMethod: 'get',
-          action: handler
+          actions: [handler]
         }
       ];
 
@@ -30,7 +30,7 @@ describe('Router', () => {
         {
           endPoint: new EndPoint('/interns/:id'),
           reqMethod: 'get',
-          action: handler
+          actions: [handler]
         }
       ];
 
@@ -48,7 +48,7 @@ describe('Router', () => {
         {
           endPoint: new EndPoint('/update'),
           reqMethod: 'put',
-          action: handler
+          actions: [handler]
         }
       ];
 
@@ -64,7 +64,7 @@ describe('Router', () => {
         {
           endPoint: new EndPoint('/interns/:id'),
           reqMethod: 'put',
-          action: handler
+          actions: [handler]
         }
       ];
 
@@ -84,7 +84,7 @@ describe('Router', () => {
       const expectedRoute = {
         endPoint: new EndPoint(reqEndPoint),
         reqMethod: 'get',
-        action: handler
+        actions: [handler]
       };
 
       const actualRoute = router.getRoute('get', reqEndPoint);
@@ -103,7 +103,7 @@ describe('Router', () => {
       const expectedRoute = {
         endPoint: new EndPoint('/interns'),
         reqMethod: 'get',
-        action: handler
+        actions: [handler]
       };
 
       const actualRoute = router.getRoute('get', reqEndPoint1);
@@ -122,7 +122,7 @@ describe('Router', () => {
       const expectedRoute = {
         endPoint: new EndPoint('/mentors/:name'),
         reqMethod: 'get',
-        action: handler
+        actions: [handler]
       };
 
       const actualRoute = router.getRoute('get', reqEndPoint2);

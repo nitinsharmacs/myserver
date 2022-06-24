@@ -13,7 +13,7 @@ const main = () => {
   });
 
   router.get('/', (req, res) => {
-    res.sendHtml('<h1>You are are home page</h1>');
+    res.sendHtml('<h1>You are at home page</h1>');
   });
 
   const PORT = 3000;
