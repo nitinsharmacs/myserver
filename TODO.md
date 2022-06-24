@@ -1,5 +1,6 @@
 ## TODO
 
+- [ ] implement redirect method on reponse
 - [ ] Don't pass router to server. Server should have router
 
 ## DONE
