@@ -3,8 +3,7 @@ const path = require('path');
 const mime = require('mime-types');
 
 const serveFile = (req, res) => {
-  const { reqEndPoint: filepath } = req;
-
+  const { uri: filepath } = req;
   fs.readFile(`./${filepath}`, (err, data) => {
     if (err) {
       res.status(404).send('File not found');
