@@ -18,8 +18,8 @@ describe('Router', () => {
         }
       ];
 
-      const getHandlers = router.getRoutes('get');
-      assert.deepEqual(getHandlers, expected);
+      const getMiddleWaress = router.getRoutes('get');
+      assert.deepEqual(getMiddleWaress, expected);
     });
 
     it('should register get end point with params', () => {
@@ -34,8 +34,8 @@ describe('Router', () => {
         }
       ];
 
-      const getHandlers = router.getRoutes('get');
-      assert.deepEqual(getHandlers, expected);
+      const getMiddleWaress = router.getRoutes('get');
+      assert.deepEqual(getMiddleWaress, expected);
     });
   });
 
@@ -52,8 +52,8 @@ describe('Router', () => {
         }
       ];
 
-      const getHandlers = router.getRoutes('put');
-      assert.deepEqual(getHandlers, expected);
+      const getMiddleWaress = router.getRoutes('put');
+      assert.deepEqual(getMiddleWaress, expected);
     });
 
     it('should register put end point with params', () => {
@@ -68,30 +68,26 @@ describe('Router', () => {
         }
       ];
 
-      const getHandlers = router.getRoutes('put');
-      assert.deepEqual(getHandlers, expected);
+      const getMiddleWaress = router.getRoutes('put');
+      assert.deepEqual(getMiddleWaress, expected);
     });
   });
 
-  describe('getRoute', () => {
-    it('should find the matching route', () => {
+  describe('getRoutePosition', () => {
+    it('should get the matching route position', () => {
       const reqEndPoint = '/';
       const handler = () => { };
 
       const router = new Router();
       router.get(reqEndPoint, handler);
 
-      const expectedRoute = {
-        endPoint: new EndPoint(reqEndPoint),
-        reqMethod: 'get',
-        actions: [handler]
-      };
+      const expectedRoutePos = 0;
 
-      const actualRoute = router.getRoute('get', reqEndPoint);
-      assert.deepEqual(actualRoute, expectedRoute);
+      const actualRoutePos = router.getRoutePosition('get', reqEndPoint);
+      assert.deepEqual(actualRoutePos, expectedRoutePos);
     });
 
-    it('should find the matching route from routes', () => {
+    it('should get the matching route position from routes', () => {
       const reqEndPoint1 = '/interns';
       const reqEndPoint2 = '/mentors';
       const handler = () => { };
@@ -100,17 +96,13 @@ describe('Router', () => {
       router.get(reqEndPoint1, handler);
       router.get(reqEndPoint2, handler);
 
-      const expectedRoute = {
-        endPoint: new EndPoint('/interns'),
-        reqMethod: 'get',
-        actions: [handler]
-      };
+      const expectedRoutePos = 0
 
-      const actualRoute = router.getRoute('get', reqEndPoint1);
-      assert.deepEqual(actualRoute, expectedRoute);
+      const actualRoutePos = router.getRoutePosition('get', reqEndPoint1);
+      assert.deepEqual(actualRoutePos, expectedRoutePos);
     });
 
-    it('should find the matching route with params in reqEndPoint', () => {
+    it('should get the matching route position with params', () => {
       const reqEndPoint1 = '/interns';
       const reqEndPoint2 = '/mentors/:name';
       const handler = () => { };
@@ -119,52 +111,56 @@ describe('Router', () => {
       router.get(reqEndPoint1, handler);
       router.get(reqEndPoint2, handler);
 
-      const expectedRoute = {
-        endPoint: new EndPoint('/mentors/:name'),
-        reqMethod: 'get',
-        actions: [handler]
-      };
+      const expectedRoutePos = 1
 
-      const actualRoute = router.getRoute('get', reqEndPoint2);
-      assert.deepEqual(actualRoute, expectedRoute);
+      const actualRoutePos = router.getRoutePosition('get', reqEndPoint2);
+      assert.deepEqual(actualRoutePos, expectedRoutePos);
     });
   });
 
-  describe('getHandler', () => {
-    it('should give the handler registered on the end point', () => {
+  describe('getMiddleWares', () => {
+    it('should give all middlewares before the end point', () => {
       const router = new Router();
+      const mid1 = () => 2;
+      const mid2 = () => 2;
       const handler = () => 5;
+      router.use(mid1);
+      router.use(mid2);
       router.get('/', handler);
 
-      const actualHandler = router.getHandler('get', '/');
-      assert.strictEqual(actualHandler(), handler());
+      const middleWares = router.getMiddleWares(
+        router.getRoutePosition('get', '/')
+      );
+      assert.deepStrictEqual(middleWares, [mid1, mid2]);
     });
 
-    it('should pass request meta to registered handler', () => {
+    it('should give all middlewares in single use', () => {
       const router = new Router();
-      const handler = (req) => req;
+      const mid1 = () => 2;
+      const mid2 = () => 2;
+      const handler = () => 5;
+      router.use(mid1, mid2);
       router.get('/', handler);
 
-      const expectedMeta = {
-        endPoint: '/',
-        reqMethod: 'get',
-        pathname: '/',
-        params: {},
-        reqEndPoint: '/'
-      };
-
-      const actualMeta = router.getHandler('get', '/')();
-      assert.deepStrictEqual(actualMeta, expectedMeta);
+      const middleWares = router.getMiddleWares(
+        router.getRoutePosition('get', '/')
+      );
+      assert.deepStrictEqual(middleWares, [mid1, mid2]);
     });
 
-    it('should throw error if no route found', () => {
+    it('should not give middleware comes after the end point', () => {
       const router = new Router();
-      const handler = (req) => req;
-      router.get('/interns', handler);
+      const mid1 = () => 2;
+      const mid2 = () => 2;
+      const handler = () => 5;
+      router.use(mid1);
+      router.get('/', handler);
+      router.use(mid2);
 
-      assert.throws(() => {
-        router.getHandler('get', '/something-else')
-      });
+      const middleWares = router.getMiddleWares(
+        router.getRoutePosition('get', '/')
+      );
+      assert.deepStrictEqual(middleWares, [mid1]);
     });
   });
 });

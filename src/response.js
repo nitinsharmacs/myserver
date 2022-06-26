@@ -1,5 +1,3 @@
-const { toSafeInteger } = require("lodash");
-
 const CRLF = '\r\n';
 
 const stringifyHeaders = (headers) => {

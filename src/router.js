@@ -1,7 +1,7 @@
 const { EndPoint } = require("./endPoint.js");
 
 const createActionsIterator = (actions) => {
-  let current = 0;
+  let current = -1;
   return function (req, res, next) {
     actions[++current](req, res, () => {
       next(req, res, next);
@@ -16,18 +16,8 @@ class Route {
     this.actions = actions;
   }
 
-  runHandlers(request, response) {
-    const reqMeta = {
-      ...request,
-      ...this.endPoint.parse(request.uri)
-    };
-
-    const next = createActionsIterator(this.actions);
-    const [currentAction] = this.actions;
-
-    currentAction(reqMeta, response, () => {
-      next(reqMeta, response, next);
-    })
+  isMiddleWare() {
+    return this.endPoint.useEndPoint;
   }
 }
 
@@ -43,6 +33,15 @@ class Router {
     this.#routes.push(route);
   }
 
+  use(...actions) {
+    const route = new Route('use', {
+      matches: () => false,
+      useEndPoint: true
+    }, actions);
+
+    this.#routes.push(route);
+  }
+
   get(endPoint, ...actions) {
     this.#register('get', endPoint, actions);
   }
@@ -51,38 +50,34 @@ class Router {
     this.#register('put', endPoint, actions);
   }
 
-  getRoute(reqMethod, reqEndPoint) {
-    return this.#routes.find(
+  getRoutePosition(reqMethod, reqEndPoint) {
+    return this.#routes.findIndex(
       route => route.reqMethod === reqMethod &&
         route.endPoint.matches(reqEndPoint)
     );
   }
 
-  getHandler(reqMethod, reqEndPoint) {
-    const route = this.getRoute(reqMethod, reqEndPoint);
-
-    if (route === undefined) {
-      throw new Error('Route not found!');
-    }
-
-    const { actions: [action], endPoint } = route;
-
-    const reqMeta = {
-      reqMethod,
-      reqEndPoint,
-      ...endPoint.parse(reqEndPoint)
-    };
-
-    return (response) => {
-      return action(reqMeta, response);
-    };
+  getMiddleWares(pos) {
+    return this.#routes.slice(0, pos).filter(route => route.isMiddleWare()).flatMap(route => route.actions);
   }
 
   runHandler(request, response) {
     const { method, uri } = request;
-    const route = this.getRoute(method.toLowerCase(), uri);
+    const routePos = this.getRoutePosition(method.toLowerCase(), uri);
+    const route = this.#routes[routePos];
 
-    route.runHandlers(request, response);
+    const reqMeta = {
+      ...request,
+      ...route.endPoint.parse(request.uri)
+    };
+
+    const middleWares = this.getMiddleWares(routePos);
+    const actions = [...middleWares, ...route.actions];
+    const actionsIterator = createActionsIterator(actions);
+
+    actionsIterator(reqMeta, response, () => {
+      actionsIterator(reqMeta, response, actionsIterator);
+    })
   }
 
   getRoutes(reqMethod) {
