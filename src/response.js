@@ -13,7 +13,7 @@ const reponseLine = (status) => {
 const httpResponse = (body, status, headers) => {
   const resHeaders = stringifyHeaders(headers);
 
-  return `HTTP/1.1 ${status}\r\n${resHeaders}\r\n${body}\r\n`;
+  return `HTTP/1.1 ${status}\r\n${resHeaders}\r\n${body}`;
 };
 
 class Response {
@@ -67,6 +67,16 @@ class Response {
     this.#socket.write(CRLF);
 
     this.#socket.write(data);
+
+    this.#socket.end();
+  }
+
+  redirect(location) {
+    this.setHeader('Location', location);
+    this.setHeader('Content-Length', 0);
+    this.#status = 302;
+
+    this.#socket.write(httpResponse('', this.#status, this.#headers));
 
     this.#socket.end();
   }

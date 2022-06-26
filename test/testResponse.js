@@ -35,7 +35,7 @@ describe('httpResponse', () => {
       'content-type': 'text/plain'
     };
 
-    const expected = 'HTTP/1.1 200\r\ncontent-type:text/plain\r\n\r\nhello\r\n';
+    const expected = 'HTTP/1.1 200\r\ncontent-type:text/plain\r\n\r\nhello';
 
     assert.strictEqual(httpResponse(body, status, headers), expected);
   });
@@ -54,7 +54,7 @@ const mockSocket = (expectedTexts) => {
 describe('Response', () => {
   describe('send', () => {
     it('should send the plain text', () => {
-      const socket = mockSocket(['HTTP/1.1 200\r\ncontent-type:text/plain\r\n\r\nhello\r\n']);
+      const socket = mockSocket(['HTTP/1.1 200\r\ncontent-type:text/plain\r\n\r\nhello']);
       const response = new Response(socket);
 
       response.send('hello');
@@ -64,7 +64,7 @@ describe('Response', () => {
 
   describe('json', () => {
     it('should send the json', () => {
-      const socket = mockSocket(['HTTP/1.1 200\r\ncontent-type:application/json\r\n\r\n{"a":1}\r\n']);
+      const socket = mockSocket(['HTTP/1.1 200\r\ncontent-type:application/json\r\n\r\n{"a":1}']);
       const response = new Response(socket);
 
       const body = { a: 1 };
@@ -76,7 +76,7 @@ describe('Response', () => {
 
   describe('sendHtml', () => {
     it('should send the html page', () => {
-      const socket = mockSocket(['HTTP/1.1 200\r\ncontent-type:text/html\r\n\r\n<h1>hello</h1>\r\n']);
+      const socket = mockSocket(['HTTP/1.1 200\r\ncontent-type:text/html\r\n\r\n<h1>hello</h1>']);
       const response = new Response(socket);
 
       const body = '<h1>hello</h1>';
@@ -100,6 +100,24 @@ describe('Response', () => {
 
       response.file(body);
       assert.ok(socket.writeCalls === 4);
+    });
+  });
+
+  describe('redirect', () => {
+    it('should redirect to given location', () => {
+      const location = '/public/index.html';
+      const socket = mockSocket([[
+        'HTTP/1.1 302\r\n',
+        `location:${location}\r\n`,
+        'content-length:0\r\n',
+        '\r\n',
+        ''
+      ].join('')]);
+
+      const response = new Response(socket);
+
+      response.redirect(location);
+      assert.ok(socket.writeCalls === 1);
     });
   });
 });

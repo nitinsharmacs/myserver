@@ -6,11 +6,6 @@ const main = () => {
   const router = new Router();
   const server = myServer(router);
 
-  router.use((req, res, next) => {
-    console.log('hii');
-    next();
-  });
-
   router.get('/public', serveFile);
 
   router.get('/demo-data', (req, res) => {
@@ -18,7 +13,7 @@ const main = () => {
   });
 
   router.get('/', (req, res) => {
-    res.sendHtml('<h1>You are at home page</h1>');
+    res.redirect('/public/kfc/index.html');
   });
 
   const PORT = 3000;

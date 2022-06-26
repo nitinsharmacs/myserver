@@ -1,7 +1,6 @@
 ## TODO
 
 - [ ] Query parser
-- [ ] redirect method in Response
 - [ ] MyServer as an entity
 - [ ] Implement fallback request
 - [ ] Make a Request entity
@@ -10,6 +9,7 @@
 
 ## DONE
 
+- [x] redirect method in Response
 - [x] Implement route handler without any endpoint
 - [x] make router working with multiple handlers
   - [x] Route entity
