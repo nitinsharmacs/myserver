@@ -6,10 +6,19 @@ const main = () => {
   const router = new Router();
   const server = myServer(router);
 
+  router.use((req, res, next) => {
+    console.log(req);
+    next();
+  });
+
   router.get('/public', serveFile);
 
-  router.get('/demo-data', (req, res) => {
+  router.get('/demo-data/:id', (req, res) => {
     res.status(200).json({ message: 'hello world' });
+  });
+
+  router.get('/favicon.ico', (req, res) => {
+    res.status(404).send('');
   });
 
   router.get('/', (req, res) => {

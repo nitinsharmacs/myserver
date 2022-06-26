@@ -22,6 +22,13 @@ const getParams = (reqEndPoint, regEndPoint) => {
   return params;
 };
 
+const parseQueryParams = (reqEndPoint) => {
+  const [, params] = reqEndPoint.split('?');
+
+  const searchParams = new URLSearchParams(params);
+  return searchParams;
+};
+
 class EndPoint {
   #endPoint;
   constructor(endPoint) {
@@ -52,6 +59,7 @@ class EndPoint {
     const params = getParams(reqEndPoint, this.#endPoint);
     return {
       params,
+      queryParams: parseQueryParams(reqEndPoint),
       endPoint: this.#endPoint,
       pathname: this.getPathname()
     };

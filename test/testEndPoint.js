@@ -60,7 +60,8 @@ describe('EndPoint', () => {
       const expected = {
         endPoint: '/interns',
         pathname: '/interns',
-        params: {}
+        params: {},
+        queryParams: new URLSearchParams()
       };
 
       assert.deepStrictEqual(endPoint.parse(reqEndPoint), expected);
@@ -75,7 +76,8 @@ describe('EndPoint', () => {
         pathname: '/interns',
         params: {
           name: 'nitin'
-        }
+        },
+        queryParams: new URLSearchParams()
       };
 
       assert.deepStrictEqual(endPoint.parse(reqEndPoint), expected);
@@ -91,7 +93,22 @@ describe('EndPoint', () => {
         params: {
           name: 'nitin',
           emp_id: '29505'
-        }
+        },
+        queryParams: new URLSearchParams()
+      };
+
+      assert.deepStrictEqual(endPoint.parse(reqEndPoint), expected);
+    });
+
+    it('should parse query params', () => {
+      const endPoint = new EndPoint('/interns');
+      const reqEndPoint = '/interns?name=nitin';
+
+      const expected = {
+        endPoint: '/interns',
+        pathname: '/interns',
+        params: {},
+        queryParams: new URLSearchParams('name=nitin')
       };
 
       assert.deepStrictEqual(endPoint.parse(reqEndPoint), expected);
