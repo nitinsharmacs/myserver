@@ -1,5 +1,14 @@
 const assert = require('assert');
-const { EndPoint } = require('../src/endpoint.js');
+const { EndPoint, parseQueryParams } = require('../src/endpoint.js');
+
+describe('parseQueryParams', () => {
+  it('should parse query params without ascii encoding', () => {
+    const reqEndPoint = '/s?q=hello';
+    const expected = new URLSearchParams('q=hello');
+
+    assert.deepStrictEqual(parseQueryParams(reqEndPoint), expected);
+  });
+});
 
 describe('EndPoint', () => {
   describe('getPathname', () => {

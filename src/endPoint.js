@@ -23,8 +23,11 @@ const getParams = (reqEndPoint, regEndPoint) => {
 };
 
 const parseQueryParams = (reqEndPoint) => {
-  const [, params] = reqEndPoint.split('?');
-
+  const paramsStart = reqEndPoint.indexOf('?');
+  let params = '';
+  if (paramsStart >= 0) {
+    params = reqEndPoint.slice(paramsStart + 1);
+  }
   const searchParams = new URLSearchParams(params);
   return searchParams;
 };
@@ -66,4 +69,4 @@ class EndPoint {
   }
 }
 
-module.exports = { EndPoint };
+module.exports = { EndPoint, parseQueryParams };
