@@ -1,5 +1,8 @@
 ## TODO
 
+- [ ] Rename serveFile to static
+  - [ ] static should return controller as closure
+- [ ] Make your own query parser, don't use URLSearchParams
 - [ ] MyServer as an entity
 - [ ] Implement fallback request
 - [ ] Make a Request entity
