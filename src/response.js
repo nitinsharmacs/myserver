@@ -20,10 +20,12 @@ class Response {
   #socket;
   #status;
   #headers;
+  #inChunkMode;
   constructor(socket) {
     this.#socket = socket;
     this.#status = 200;
     this.#headers = {};
+    this.#inChunkMode = false;
   }
 
   setHeader(header, value) {
@@ -79,6 +81,26 @@ class Response {
     this.#socket.write(httpResponse('', this.#status, this.#headers));
 
     this.#socket.end();
+  }
+
+  write(chunk) {
+    if (!this.#inChunkMode) {
+      this.setHeader('Transfer-encoding', 'chunked');
+      this.#socket.write(httpResponse('', this.#status, this.#headers));
+    }
+
+    this.#inChunkMode = true;
+
+    const chunkSize = chunk.length;
+    this.#socket.write(chunkSize.toString(16) + CRLF);
+    this.#socket.write(chunk);
+    this.#socket.write(CRLF);
+  }
+
+  end() {
+    this.#socket.write('0' + CRLF.repeat(2));
+    this.#socket.end();
+    this.#inChunkMode = false;
   }
 }
 

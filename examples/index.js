@@ -1,7 +1,20 @@
 const { myServer, Router } = require('../index.js');
+const mime = require('mime-types');
 
 const router = new Router();
 const server = myServer(router);
+const fs = require('fs');
+
+router.get('/big-files', (req, res) => {
+  const readStream = fs.createReadStream('./step-7.mp4');
+  res.setHeader('content-type', mime.contentType('mp4'));
+  readStream.on('data', chunk => {
+    res.write(chunk);
+  });
+  readStream.on('end', () => {
+    res.end();
+  });
+});
 
 router.get('/', (req, res, next) => {
   console.log('hello');

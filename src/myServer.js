@@ -8,8 +8,12 @@ const onNewConnection = (socket, router) => {
   socket.on('data', chunk => {
     const req = parseRequest(chunk);
     const res = new Response(socket);
+
+    console.log(req);
     router.runHandler(req, res);
   });
+
+  socket.on('error', () => { });
 };
 
 const myServer = (router) =>
