@@ -1,8 +1,16 @@
 const { EndPoint } = require("./endPoint.js");
 
+const done = (current, actions) => {
+  return current >= actions.length - 1
+};
+
 const createActionsIterator = (actions) => {
   let current = -1;
   return function (req, res, next) {
+    if (done(current, actions)) {
+      return;
+    }
+
     actions[++current](req, res, () => {
       next(req, res, next);
     });
