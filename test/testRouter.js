@@ -163,4 +163,58 @@ describe('Router', () => {
       assert.deepStrictEqual(middleWares, [mid1]);
     });
   });
+
+  describe('runHandler', () => {
+    it('should run the matched handler', () => {
+      const router = new Router();
+      const handlerResults = [];
+      const handler = (req, res) => { handlerResults.push('hello') };
+      router.get('/', handler);
+
+      const req = { method: 'get', uri: '/' };
+      const res = {};
+
+      const expected = ['hello'];
+      router.runHandler(req, res);
+      assert.deepStrictEqual(handlerResults, expected);
+    });
+
+    it('should run handler chain', () => {
+      const router = new Router();
+      const handlerResults = [];
+      const handler1 = (req, res, next) => {
+        handlerResults.push('hello');
+        next();
+      };
+      const handler2 = (req, res) => {
+        handlerResults.push('world');
+      };
+      router.get('/', handler1, handler2);
+
+      const req = { method: 'get', uri: '/' };
+      const res = {};
+
+      const expected = ['hello', 'world'];
+      router.runHandler(req, res);
+      assert.deepStrictEqual(handlerResults, expected);
+    });
+
+    it('should run middlewares', () => {
+      const router = new Router();
+      const middleWaresResults = [];
+
+      const middleWare = (req, res) => {
+        middleWaresResults.push('hello');
+      };
+
+      router.use(middleWare);
+
+      const req = { method: 'get', uri: '/' };
+      const res = {};
+
+      const expected = ['hello'];
+      router.runHandler(req, res);
+      assert.deepStrictEqual(middleWaresResults, expected);
+    });
+  });
 });

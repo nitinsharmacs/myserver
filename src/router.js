@@ -23,8 +23,10 @@ class Route {
 
 class Router {
   #routes;
+  #fallBacks;
   constructor() {
     this.#routes = [];
+    this.#fallBacks = [];
   }
 
   #register(reqMethod, endPoint, actions) {
@@ -50,6 +52,10 @@ class Router {
     this.#register('put', endPoint, actions);
   }
 
+  fallBack(...actions) {
+    this.#fallBacks.push({ actions });
+  }
+
   getRoutePosition(reqMethod, reqEndPoint) {
     return this.#routes.findIndex(
       route => route.reqMethod === reqMethod &&
@@ -61,9 +67,27 @@ class Router {
     return this.#routes.slice(0, pos).filter(route => route.isMiddleWare()).flatMap(route => route.actions);
   }
 
+  #runActions(actions, request, response) {
+    const actionsIterator = createActionsIterator(actions);
+
+    actionsIterator(request, response, () => {
+      actionsIterator(request, response, actionsIterator);
+    });
+  }
+
+  #runMiddleWares(request, response) {
+    const middleWares = this.getMiddleWares(this.#routes.length);
+    this.#runActions(middleWares, request, response);
+  }
+
   runHandler(request, response) {
     const { method, uri } = request;
     const routePos = this.getRoutePosition(method.toLowerCase(), uri);
+    if (routePos < 0) {
+      this.#runMiddleWares(request, response);
+      return;
+    }
+
     const route = this.#routes[routePos];
 
     const reqMeta = {
@@ -73,11 +97,8 @@ class Router {
 
     const middleWares = this.getMiddleWares(routePos);
     const actions = [...middleWares, ...route.actions];
-    const actionsIterator = createActionsIterator(actions);
 
-    actionsIterator(reqMeta, response, () => {
-      actionsIterator(reqMeta, response, actionsIterator);
-    })
+    this.#runActions(actions, reqMeta, response);
   }
 
   getRoutes(reqMethod) {

@@ -55,6 +55,9 @@ class EndPoint {
 
   matches(reqEndPoint) {
     const pathname = this.getPathname();
+    if (pathname === '/' && reqEndPoint !== '/') {
+      return false;
+    }
     return reqEndPoint.startsWith(pathname);
   }
 
