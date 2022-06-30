@@ -1,4 +1,4 @@
-[![myServer Logo](https://nitinsharmacs.github.io/myserver.png)](https://github.com/nitinsharmacs/myserver)
+[![myServer Logo](https://nitinsharmacs.github.io/projectsImages/myserver.png)](https://github.com/nitinsharmacs/myserver)
 
   Simple nodejs net createServer for [node](http://nodejs.org).
 
