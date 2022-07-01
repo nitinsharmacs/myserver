@@ -27,6 +27,7 @@ $ npm install https://github.com/nitinsharmacs/myserver
   * Routing
   * Redirection
   * Chunked data serving
+  * Body parser
 
 ## Example
 
@@ -50,3 +51,7 @@ To run tests, install the mocha dependancy and run the tests:
 $ npm install mocha
 $ npm test
 ```
+
+### Limitations
+
+* Can't handle uploading of a file

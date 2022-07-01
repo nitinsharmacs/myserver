@@ -1,8 +1,5 @@
 ## TODO
 
-- [x] Implement body parser
-  - [x] x-www-form-urlencoded
-  - [x] application/json
 - [ ] Handle request when body is big
 - [ ] remove the file url path dependancy from serveFile
 - [ ] MyServer as an entity
@@ -13,6 +10,9 @@
 
 ## DONE
 
+- [x] Implement body parser
+  - [x] x-www-form-urlencoded
+  - [x] application/json
 - [x]~~Make your own query parser, don't use URLSearchParams~~
 - [x] ~~Rename serveFile to static~~
   - [x] ~~static should return controller as closure~~
