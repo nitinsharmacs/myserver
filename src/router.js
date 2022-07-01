@@ -4,7 +4,7 @@ const done = (current, actions) => {
   return current >= actions.length - 1
 };
 
-const createActionsIterator = (actions) => {
+const createNext = (actions) => {
   let current = -1;
   return function (req, res, next) {
     if (done(current, actions)) {
@@ -60,6 +60,10 @@ class Router {
     this.#register('put', endPoint, actions);
   }
 
+  post(endPoint, ...actions) {
+    this.#register('post', endPoint, actions);
+  }
+
   fallBack(...actions) {
     this.#fallBacks.push({ actions });
   }
@@ -76,7 +80,7 @@ class Router {
   }
 
   #runActions(actions, request, response) {
-    const actionsIterator = createActionsIterator(actions);
+    const actionsIterator = createNext(actions);
 
     actionsIterator(request, response, () => {
       actionsIterator(request, response, actionsIterator);

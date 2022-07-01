@@ -12,7 +12,13 @@
 const _ = require('lodash');
 
 const splitRequest = (request) => {
-  return request.split('\r\n');
+  const [requestLine, ...restOfRequest] = request.split('\r\n');
+
+  const endOfHeaders = restOfRequest.lastIndexOf('');
+  const rawHeaders = restOfRequest.slice(0, endOfHeaders);
+  const [rawBody] = restOfRequest.slice(endOfHeaders + 1);
+
+  return { requestLine, rawHeaders, rawBody };
 };
 
 const parseHeaderLine = (headerLine) => {
@@ -44,11 +50,11 @@ const parseRequestLine = (requestLine) => {
 };
 
 const parseRequest = (request) => {
-  const [requestLine, ...restOfRequest] = splitRequest(request);
-
+  const { requestLine, rawHeaders, rawBody } = splitRequest(request);
   return {
     ...parseRequestLine(requestLine),
-    headers: parseHeader(restOfRequest)
+    headers: parseHeader(rawHeaders),
+    rawBody
   };
 };
 

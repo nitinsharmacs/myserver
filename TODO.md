@@ -1,8 +1,10 @@
 ## TODO
 
-- [ ] Rename serveFile to static
-  - [ ] static should return controller as closure
-- [ ] Make your own query parser, don't use URLSearchParams
+- [x] Implement body parser
+  - [x] x-www-form-urlencoded
+  - [x] application/json
+- [ ] Handle request when body is big
+- [ ] remove the file url path dependancy from serveFile
 - [ ] MyServer as an entity
 - [ ] Implement fallback request
 - [ ] Make a Request entity
@@ -11,6 +13,9 @@
 
 ## DONE
 
+- [x]~~Make your own query parser, don't use URLSearchParams~~
+- [x] ~~Rename serveFile to static~~
+  - [x] ~~static should return controller as closure~~
 - [x] Query parser
 - [x] redirect method in Response
 - [x] Implement route handler without any endpoint

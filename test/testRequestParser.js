@@ -11,7 +11,8 @@ describe('parseRequest', () => {
       method: 'GET',
       uri: '/',
       version: 'HTTP/1.1',
-      headers: {}
+      headers: {},
+      rawBody: undefined
     };
 
     assert.deepStrictEqual(parseRequest(request), expected);
@@ -27,7 +28,22 @@ describe('parseRequest', () => {
       headers: {
         'user-agent': 'chrome',
         h: 'ef3'
-      }
+      },
+      rawBody: undefined
+    };
+
+    assert.deepStrictEqual(parseRequest(request), expected);
+  });
+
+  it('should parse request with body', () => {
+    const request = `GET /home HTTP/1.1${CRLF}${CRLF}name=nitin`;
+
+    const expected = {
+      method: 'GET',
+      uri: '/home',
+      version: 'HTTP/1.1',
+      headers: {},
+      rawBody: 'name=nitin'
     };
 
     assert.deepStrictEqual(parseRequest(request), expected);
