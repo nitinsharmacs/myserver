@@ -1,5 +1,7 @@
 ## TODO
 
+- [ ] implement response to create multiple headers of same header name
+  - [ ] for eg, Set-Cookie
 - [ ] Handle request when body is big
 - [ ] remove the file url path dependancy from serveFile
 - [ ] MyServer as an entity
@@ -10,6 +12,7 @@
 
 ## DONE
 
+- [x] don't lowercase header values
 - [x] Implement body parser
   - [x] x-www-form-urlencoded
   - [x] application/json

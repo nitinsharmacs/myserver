@@ -1,14 +1,3 @@
-/**
- * 
- * request 
- * 
- * METHOD SP REQUEST_URI SP HTTP_VERSION CRLF
- * HEADER1 CRLF
- * HEADER2 CRLF
- * CRLF
- * 
-*/
-
 const _ = require('lodash');
 
 const splitRequest = (request) => {
@@ -25,7 +14,7 @@ const parseHeaderLine = (headerLine) => {
   const keyEnd = headerLine.indexOf(':');
 
   const key = headerLine.slice(0, keyEnd).trim().toLowerCase();
-  const value = headerLine.slice(keyEnd + 1).trim().toLowerCase();
+  const value = headerLine.slice(keyEnd + 1).trim();
 
   return { key, value };
 };
