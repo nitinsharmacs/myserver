@@ -7,7 +7,7 @@ const { stringifyHeaders,
 describe('stringifyHeaders', () => {
   it('should stringify a single header', () => {
     const headers = {
-      'user-agent': 'something'
+      'user-agent': ['something']
     };
 
     const expected = 'user-agent:something\r\n';
@@ -17,8 +17,8 @@ describe('stringifyHeaders', () => {
 
   it('should stringify headers', () => {
     const headers = {
-      'user-agent': 'something',
-      'content-type': 'application/json'
+      'user-agent': ['something'],
+      'content-type': ['application/json']
     };
 
     const expected = 'user-agent:something\r\ncontent-type:application/json\r\n';
@@ -32,7 +32,7 @@ describe('httpResponse', () => {
     const body = 'hello';
     const status = 200;
     const headers = {
-      'content-type': 'text/plain'
+      'content-type': ['text/plain']
     };
 
     const expected = 'HTTP/1.1 200\r\ncontent-type:text/plain\r\n\r\nhello';

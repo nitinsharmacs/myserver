@@ -1,9 +1,13 @@
 const CRLF = '\r\n';
 
+const stringifyHeader = (header, values) => {
+  return values.map(value => `${header}:${value}${CRLF}`).join('');
+};
+
 const stringifyHeaders = (headers) => {
-  return Object.entries(headers).map(
-    ([header, value]) => `${header}:${value}${CRLF}`
-  ).join('');
+  return Object.entries(headers).map(([header, values]) => {
+    return stringifyHeader(header, values);
+  }).join('');
 };
 
 const reponseLine = (status) => {
@@ -28,8 +32,12 @@ class Response {
     this.#inChunkMode = false;
   }
 
-  setHeader(header, value) {
-    this.#headers[header.toLowerCase()] = value;
+  setHeader(header, values) {
+    const resValues = [values];
+    if (Array.isArray(values)) {
+      resValues = values;
+    }
+    this.#headers[header.toLowerCase()] = resValues;
   }
 
   status(statusCode) {
