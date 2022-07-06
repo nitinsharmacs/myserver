@@ -33,7 +33,7 @@ class Response {
   }
 
   setHeader(header, values) {
-    const resValues = [values];
+    let resValues = [values];
     if (Array.isArray(values)) {
       resValues = values;
     }
