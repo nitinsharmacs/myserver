@@ -1,4 +1,5 @@
 const { EndPoint } = require("./endPoint.js");
+const { copyProperties } = require('./utils/copyObjects.js');
 
 const done = (current, actions) => {
   return current >= actions.length - 1
@@ -102,15 +103,12 @@ class Router {
 
     const route = this.#routes[routePos];
 
-    const reqMeta = {
-      ...request,
-      ...route.endPoint.parse(request.uri)
-    };
+    copyProperties(route.endPoint.parse(request.uri), request);
 
     const middleWares = this.getMiddleWares(routePos);
     const actions = [...middleWares, ...route.actions];
 
-    this.#runActions(actions, reqMeta, response);
+    this.#runActions(actions, request, response);
   }
 
   getRoutes(reqMethod) {

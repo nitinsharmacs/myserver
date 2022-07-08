@@ -18,11 +18,18 @@ router.get('/big-files', (req, res) => {
 
 router.get('/', (req, res, next) => {
   console.log('hello');
+  next();
 }, (req, res) => {
   res.send('welcome to the world of misfit toys');
 });
 
-router.get('/comment', (req, res) => {
+router.post('/comment', (req, res) => {
+  console.log(req.headers);
+  req.setEncoding('utf8');
+  req.on('data', (chunk) => {
+    console.log(chunk);
+  });
+
   res.send('added comment');
 });
 

@@ -1,23 +1,16 @@
-const { createServer } = require('net');
+const { createServer } = require('http');
 const { parseRequest } = require('./requestParser.js');
 const { Response } = require('./response.js');
 
-const onNewConnection = (socket, router) => {
-  socket.setEncoding('utf8');
-  // let rawReq = '';
+const onNewConnection = (req, res, router) => {
+  const response = new Response(res.socket);
 
-  socket.on('data', chunk => {
-    const req = parseRequest(chunk);
-    const res = new Response(socket);
-    console.log(req);
+  req.uri = req.url;
 
-    router.runHandler(req, res);
-  });
-
-  socket.on('error', () => { });
+  router.runHandler(req, response);
 };
 
 const myServer = (router) =>
-  createServer(socket => onNewConnection(socket, router));
+  createServer((req, res) => onNewConnection(req, res, router));
 
 module.exports = { myServer };
