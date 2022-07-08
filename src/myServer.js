@@ -1,5 +1,4 @@
 const { createServer } = require('http');
-const { parseRequest } = require('./requestParser.js');
 const { Response } = require('./response.js');
 
 const onNewConnection = (req, res, router) => {
